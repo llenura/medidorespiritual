@@ -1,3 +1,46 @@
+// Contextos de los canvas
+window.ctxOracion = document.getElementById('oracionChart').getContext('2d');
+window.ctxBiblia = document.getElementById('bibliaChart').getContext('2d');
+
+// Gráfico de Oración
+window.oracionChart = new Chart(window.ctxOracion, {
+    type: 'line',
+    data: {
+        labels: ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],
+        datasets: [{
+            label: 'Nivel de Oración',
+            data: [5,6,7,4,8,7,6],
+            borderColor: '#27ae60',
+            backgroundColor: 'rgba(39, 174, 96, 0.2)',
+            tension: 0.4,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: { legend: { display: true } },
+        scales: { y: { min: 0, max: 10 } }
+    }
+});
+
+// Gráfico de Biblia
+window.bibliaChart = new Chart(window.ctxBiblia, {
+    type: 'line',
+    data: {
+        labels: ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],
+        datasets: [{
+            label: 'Lectura de Biblia',
+            data: [4,5,6,3,7,5,6],
+            borderColor: '#1abc9c',
+            backgroundColor: 'rgba(26, 188, 156, 0.2)',
+            tension: 0.4,
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: { y: { min: 0, max: 10 } }
+    }
+});
+
 // Datos iniciales de ejemplo
 let datos = [
     { fecha: 'Lun', oracion: 5, biblia: 4, tentaciones: 1, recaidas: 0 },
@@ -11,9 +54,9 @@ let datos = [
 
 // Función para asignar color según nivel
 function nivelColor(nivel) {
-    if(nivel >= 8) return '#27ae60'; // verde
-    else if(nivel >= 5) return '#f1c40f'; // amarillo
-    else return '#e74c3c'; // rojo
+    if(nivel >= 8) return '#27ae60';
+    else if(nivel >= 5) return '#f1c40f';
+    else return '#e74c3c';
 }
 
 // Actualizar dashboard
@@ -34,20 +77,27 @@ function actualizarDashboard() {
     // Actualizar medidores
     const ultimo = datos[datos.length - 1];
     if (ultimo) {
-        const medOracion = document.getElementById('medidorOracion');
-        const medBiblia = document.getElementById('medidorBiblia');
-        const medTentaciones = document.getElementById('medidorTentaciones');
-        const medRecaidas = document.getElementById('medidorRecaidas');
+        const medidores = [
+            {id: 'medidorOracion', valor: ultimo.oracion, texto: 'Oración'},
+            {id: 'medidorBiblia', valor: ultimo.biblia, texto: 'Biblia'},
+            {id: 'medidorTentaciones', valor: ultimo.tentaciones, texto: 'Tentaciones'},
+            {id: 'medidorRecaidas', valor: ultimo.recaidas, texto: 'Recaídas'}
+        ];
 
-        medOracion.textContent = Oración: ${ultimo.oracion};
-        medBiblia.textContent = Biblia: ${ultimo.biblia};
-        medTentaciones.textContent = Tentaciones: ${ultimo.tentaciones ? 'Sí' : 'No'};
-        medRecaidas.textContent = Recaídas: ${ultimo.recaidas ? 'Sí' : 'No'};
-
-        medOracion.style.backgroundColor = nivelColor(ultimo.oracion);
-        medBiblia.style.backgroundColor = nivelColor(ultimo.biblia);
-        medTentaciones.style.backgroundColor = ultimo.tentaciones ? '#27ae60' : '#e74c3c';
-        medRecaidas.style.backgroundColor = ultimo.recaidas ? '#e74c3c' : '#27ae60';
+        medidores.forEach(m => {
+            const el = document.getElementById(m.id);
+            if(el){
+                if(m.id === 'medidorTentaciones' || m.id === 'medidorRecaidas'){
+                    el.textContent = ${m.texto}: ${m.valor ? 'Sí' : 'No'};
+                    el.style.backgroundColor = m.valor ? '#27ae60' : '#e74c3c';
+                    el.style.color = 'white';
+                } else {
+                    el.textContent = ${m.texto}: ${m.valor};
+                    el.style.backgroundColor = nivelColor(m.valor);
+                    el.style.color = 'white';
+                }
+            }
+        });
     }
 
     // Resumen semanal
@@ -72,35 +122,9 @@ document.getElementById('registroForm').addEventListener('submit', (e)=>{
     };
     datos.push(nuevo);
     actualizarDashboard();
-    e.target.reset();
+    document.getElementById('registroForm').reset();
 });
 
-// Diario espiritual simple
-document.getElementById('guardarReflexion').addEventListener('click', ()=>{
-    const texto = document.getElementById('reflexion').value;
-    if(texto){
-        const analisis = analizarSentimiento(texto);
-        document.getElementById('analisisSentimiento').textContent = Sentimiento detectado: ${analisis};
-        document.getElementById('reflexion').value = '';
-    }
-});
-
-// Análisis de sentimiento simple
-function analizarSentimiento(texto){
-    const positivo = ['paz','gratitud','amor','alegría','bendición'];
-    const negativo = ['tentación','culpa','triste','ira','recaída'];
-    let score = 0;
-    texto.split(' ').forEach(palabra=>{
-        if(positivo.includes(palabra.toLowerCase())) score++;
-        if(negativo.includes(palabra.toLowerCase())) score--;
-    });
-    if(score > 0) return 'Positivo';
-    else if(score < 0) return 'Negativo';
-    else return 'Neutral';
-}
-
-// Inicializar dashboard al cargar
-window.addEventListener('DOMContentLoaded', () => {
-    actualizarDashboard();
-});
+// Ejecutar al cargar
+actualizarDashboard();
 
