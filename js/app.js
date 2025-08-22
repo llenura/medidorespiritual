@@ -33,7 +33,7 @@ function actualizarDashboard() {
         document.getElementById('medidorBiblia').textContent = Biblia: ${ultimo.biblia};
         document.getElementById('medidorTentaciones').textContent = Tentaciones: ${ultimo.tentaciones ? 'Sí' : 'No'};
         document.getElementById('medidorRecaidas').textContent = Recaídas: ${ultimo.recaidas ? 'Sí' : 'No'};
-        
+
         document.getElementById('medidorOracion').style.backgroundColor = nivelColor(ultimo.oracion);
         document.getElementById('medidorBiblia').style.backgroundColor = nivelColor(ultimo.biblia);
         document.getElementById('medidorTentaciones').style.backgroundColor = ultimo.tentaciones ? '#27ae60' : '#e74c3c';
