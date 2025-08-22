@@ -192,6 +192,7 @@
 </footer>
 
 <script>
+// Contador de asistentes
 let asistentes = 0;
 
 function marcarAsistencia(asistira) {
@@ -203,20 +204,24 @@ function marcarAsistencia(asistira) {
   document.getElementById('contador-asistentes').innerText = asistentes;
 }
 
+// Comentarios en la misma página
 function agregarComentario() {
   const nombre = document.getElementById('nombre').value;
   const mensaje = document.getElementById('mensaje').value;
   const lista = document.getElementById('lista-comentarios');
 
-  const nuevoComentario = document.createElement('p');
-  nuevoComentario.innerHTML = <strong>${nombre}:</strong> ${mensaje};
-  lista.appendChild(nuevoComentario);
+  if(nombre && mensaje) {
+    const nuevoComentario = document.createElement('p');
+    nuevoComentario.innerHTML = <strong>${nombre}:</strong> ${mensaje};
+    lista.appendChild(nuevoComentario);
+    document.getElementById('form-comentarios').reset();
+  }
 
-  document.getElementById('form-comentarios').reset();
-  return false;
+  return false; // evita recargar la página
 }
 </script>
 
 </body>
 </html>
+
 
