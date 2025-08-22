@@ -1,6 +1,4 @@
-// app.js - Dashboard completo para Medidor Espiritual
-
-// Datos iniciales de ejemplo para que los gráficos se vean al cargar
+// Datos iniciales de ejemplo
 let datos = [
     { fecha: 'Lun', oracion: 5, biblia: 4, tentaciones: 1, recaidas: 0 },
     { fecha: 'Mar', oracion: 6, biblia: 5, tentaciones: 1, recaidas: 0 },
@@ -11,20 +9,27 @@ let datos = [
     { fecha: 'Dom', oracion: 6, biblia: 6, tentaciones: 1, recaidas: 0 },
 ];
 
-// Función para actualizar gráficos y medidores
+// Función para asignar color según nivel
+function nivelColor(nivel) {
+    if(nivel >= 8) return '#27ae60';
+    else if(nivel >= 5) return '#f1c40f';
+    else return '#e74c3c';
+}
+
+// Actualizar dashboard
 function actualizarDashboard() {
     const fechas = datos.map(d => d.fecha);
     const oracion = datos.map(d => d.oracion);
     const biblia = datos.map(d => d.biblia);
 
     // Actualizar gráficos
-    oracionChart.data.labels = fechas;
-    oracionChart.data.datasets[0].data = oracion;
-    oracionChart.update();
+    window.oracionChart.data.labels = fechas;
+    window.oracionChart.data.datasets[0].data = oracion;
+    window.oracionChart.update();
 
-    bibliaChart.data.labels = fechas;
-    bibliaChart.data.datasets[0].data = biblia;
-    bibliaChart.update();
+    window.bibliaChart.data.labels = fechas;
+    window.bibliaChart.data.datasets[0].data = biblia;
+    window.bibliaChart.update();
 
     // Actualizar medidores
     const ultimo = datos[datos.length - 1];
@@ -33,7 +38,7 @@ function actualizarDashboard() {
         document.getElementById('medidorBiblia').textContent = Biblia: ${ultimo.biblia};
         document.getElementById('medidorTentaciones').textContent = Tentaciones: ${ultimo.tentaciones ? 'Sí' : 'No'};
         document.getElementById('medidorRecaidas').textContent = Recaídas: ${ultimo.recaidas ? 'Sí' : 'No'};
-
+        
         document.getElementById('medidorOracion').style.backgroundColor = nivelColor(ultimo.oracion);
         document.getElementById('medidorBiblia').style.backgroundColor = nivelColor(ultimo.biblia);
         document.getElementById('medidorTentaciones').style.backgroundColor = ultimo.tentaciones ? '#27ae60' : '#e74c3c';
@@ -48,13 +53,6 @@ function actualizarDashboard() {
         document.getElementById('resumenText').textContent = 
             Oración promedio: ${promedioOracion}, máximo: ${maxOracion}, mínimo: ${minOracion};
     }
-}
-
-// Función para asignar color según nivel
-function nivelColor(nivel) {
-    if(nivel >= 8) return '#27ae60'; // verde
-    else if(nivel >= 5) return '#f1c40f'; // amarillo
-    else return '#e74c3c'; // rojo
 }
 
 // Registro diario
@@ -72,7 +70,7 @@ document.getElementById('registroForm').addEventListener('submit', (e)=>{
     e.target.reset();
 });
 
-// Diario espiritual simple
+// Diario espiritual
 document.getElementById('guardarReflexion').addEventListener('click', ()=>{
     const texto = document.getElementById('reflexion').value;
     if(texto){
@@ -98,12 +96,4 @@ function analizarSentimiento(texto){
 
 // Inicializar dashboard al cargar
 actualizarDashboard();
-
-/* 
-  Integración con Google Sheets:
-  1. Crear un Google Sheet.
-  2. Publicar -> "Publicar en la web".
-  3. Obtener URL JSON con Tabletop.js o Google Sheets API.
-  4. Reemplazar la variable 'datos' con fetch desde Google Sheets.
-*/
 
