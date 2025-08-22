@@ -11,95 +11,57 @@ let datos = [
 
 // Función para asignar color según nivel
 function nivelColor(nivel) {
-    if(nivel >= 8) return '#27ae60';
-    else if(nivel >= 5) return '#f1c40f';
-    else return '#e74c3c';
+    if(nivel >= 8) return '#27ae60'; // verde
+    else if(nivel >= 5) return '#f1c40f'; // amarillo
+    else return '#e74c3c'; // rojo
 }
 
-// --- Inicializar gráficos de línea (Chart.js) ---
-const ctxOracion = document.getElementById('oracionChart').getContext('2d');
-const ctxBiblia = document.getElementById('bibliaChart').getContext('2d');
-
-const oracionChart = new Chart(ctxOracion, {
-    type: 'line',
-    data: {
-        labels: datos.map(d=>d.fecha),
-        datasets: [{
-            label: 'Nivel de Oración',
-            data: datos.map(d=>d.oracion),
-            borderColor: '#27ae60',
-            backgroundColor: 'rgba(39, 174, 96, 0.2)',
-            tension: 0.4
-        }]
-    },
-    options: { responsive: true, scales: { y: { min:0, max:10 } } }
-});
-
-const bibliaChart = new Chart(ctxBiblia, {
-    type: 'line',
-    data: {
-        labels: datos.map(d=>d.fecha),
-        datasets: [{
-            label: 'Lectura de Biblia',
-            data: datos.map(d=>d.biblia),
-            borderColor: '#1abc9c',
-            backgroundColor: 'rgba(26, 188, 156, 0.2)',
-            tension: 0.4
-        }]
-    },
-    options: { responsive: true, scales: { y: { min:0, max:10 } } }
-});
-
-// --- Función para actualizar medidores circulares ---
-function actualizarMedidores() {
-    const ultimo = datos[datos.length-1];
-    if(!ultimo) return;
-
-    // Oración
-    const medidorOracion = document.getElementById('medidorOracion');
-    medidorOracion.textContent = Oración: ${ultimo.oracion};
-    medidorOracion.style.backgroundColor = nivelColor(ultimo.oracion);
-
-    // Biblia
-    const medidorBiblia = document.getElementById('medidorBiblia');
-    medidorBiblia.textContent = Biblia: ${ultimo.biblia};
-    medidorBiblia.style.backgroundColor = nivelColor(ultimo.biblia);
-
-    // Tentaciones
-    const medidorTentaciones = document.getElementById('medidorTentaciones');
-    medidorTentaciones.textContent = Tentaciones: ${ultimo.tentaciones ? 'Sí' : 'No'};
-    medidorTentaciones.style.backgroundColor = ultimo.tentaciones ? '#27ae60' : '#e74c3c';
-
-    // Recaídas
-    const medidorRecaidas = document.getElementById('medidorRecaidas');
-    medidorRecaidas.textContent = Recaídas: ${ultimo.recaidas ? 'Sí' : 'No'};
-    medidorRecaidas.style.backgroundColor = ultimo.recaidas ? '#e74c3c' : '#27ae60';
-}
-
-// --- Función para actualizar todo el dashboard ---
+// Actualizar dashboard
 function actualizarDashboard() {
-    // Gráficas
-    oracionChart.data.labels = datos.map(d=>d.fecha);
-    oracionChart.data.datasets[0].data = datos.map(d=>d.oracion);
-    oracionChart.update();
+    const fechas = datos.map(d => d.fecha);
+    const oracion = datos.map(d => d.oracion);
+    const biblia = datos.map(d => d.biblia);
 
-    bibliaChart.data.labels = datos.map(d=>d.fecha);
-    bibliaChart.data.datasets[0].data = datos.map(d=>d.biblia);
-    bibliaChart.update();
+    // Actualizar gráficos
+    window.oracionChart.data.labels = fechas;
+    window.oracionChart.data.datasets[0].data = oracion;
+    window.oracionChart.update();
 
-    // Medidores circulares
-    actualizarMedidores();
+    window.bibliaChart.data.labels = fechas;
+    window.bibliaChart.data.datasets[0].data = biblia;
+    window.bibliaChart.update();
+
+    // Actualizar medidores
+    const ultimo = datos[datos.length - 1];
+    if (ultimo) {
+        const medOracion = document.getElementById('medidorOracion');
+        const medBiblia = document.getElementById('medidorBiblia');
+        const medTentaciones = document.getElementById('medidorTentaciones');
+        const medRecaidas = document.getElementById('medidorRecaidas');
+
+        medOracion.textContent = Oración: ${ultimo.oracion};
+        medBiblia.textContent = Biblia: ${ultimo.biblia};
+        medTentaciones.textContent = Tentaciones: ${ultimo.tentaciones ? 'Sí' : 'No'};
+        medRecaidas.textContent = Recaídas: ${ultimo.recaidas ? 'Sí' : 'No'};
+
+        medOracion.style.backgroundColor = nivelColor(ultimo.oracion);
+        medBiblia.style.backgroundColor = nivelColor(ultimo.biblia);
+        medTentaciones.style.backgroundColor = ultimo.tentaciones ? '#27ae60' : '#e74c3c';
+        medRecaidas.style.backgroundColor = ultimo.recaidas ? '#e74c3c' : '#27ae60';
+    }
 
     // Resumen semanal
-    const promedioOracion = (datos.map(d=>d.oracion).reduce((a,b)=>a+b,0)/datos.length).toFixed(1);
-    const maxOracion = Math.max(...datos.map(d=>d.oracion));
-    const minOracion = Math.min(...datos.map(d=>d.oracion));
-    document.getElementById('resumenText').textContent = 
-        Oración promedio: ${promedioOracion}, máximo: ${maxOracion}, mínimo: ${minOracion};
+    if(datos.length > 0){
+        const promedioOracion = (oracion.reduce((a,b)=>a+b,0)/oracion.length).toFixed(1);
+        const maxOracion = Math.max(...oracion);
+        const minOracion = Math.min(...oracion);
+        document.getElementById('resumenText').textContent = 
+            Oración promedio: ${promedioOracion}, máximo: ${maxOracion}, mínimo: ${minOracion};
+    }
 }
 
-// --- Registro diario ---
-document.getElementById('registroForm').addEventListener('submit', e=>{
+// Registro diario
+document.getElementById('registroForm').addEventListener('submit', (e)=>{
     e.preventDefault();
     const nuevo = {
         fecha: new Date().toLocaleDateString(),
@@ -113,7 +75,7 @@ document.getElementById('registroForm').addEventListener('submit', e=>{
     e.target.reset();
 });
 
-// --- Diario espiritual ---
+// Diario espiritual simple
 document.getElementById('guardarReflexion').addEventListener('click', ()=>{
     const texto = document.getElementById('reflexion').value;
     if(texto){
@@ -123,19 +85,22 @@ document.getElementById('guardarReflexion').addEventListener('click', ()=>{
     }
 });
 
+// Análisis de sentimiento simple
 function analizarSentimiento(texto){
     const positivo = ['paz','gratitud','amor','alegría','bendición'];
     const negativo = ['tentación','culpa','triste','ira','recaída'];
     let score = 0;
-    texto.split(' ').forEach(p=>{
-        if(positivo.includes(p.toLowerCase())) score++;
-        if(negativo.includes(p.toLowerCase())) score--;
+    texto.split(' ').forEach(palabra=>{
+        if(positivo.includes(palabra.toLowerCase())) score++;
+        if(negativo.includes(palabra.toLowerCase())) score--;
     });
-    if(score>0) return 'Positivo';
-    else if(score<0) return 'Negativo';
+    if(score > 0) return 'Positivo';
+    else if(score < 0) return 'Negativo';
     else return 'Neutral';
 }
 
-// --- Inicializar dashboard al cargar ---
-actualizarDashboard();
+// Inicializar dashboard al cargar
+window.addEventListener('DOMContentLoaded', () => {
+    actualizarDashboard();
+});
 
