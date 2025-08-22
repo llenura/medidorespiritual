@@ -1,5 +1,15 @@
-// Datos simulados (se puede reemplazar por Google Sheets)
-let datos = [];
+// app.js - Dashboard completo para Medidor Espiritual
+
+// Datos iniciales de ejemplo para que los gráficos se vean al cargar
+let datos = [
+    { fecha: 'Lun', oracion: 5, biblia: 4, tentaciones: 1, recaidas: 0 },
+    { fecha: 'Mar', oracion: 6, biblia: 5, tentaciones: 1, recaidas: 0 },
+    { fecha: 'Mié', oracion: 7, biblia: 6, tentaciones: 1, recaidas: 0 },
+    { fecha: 'Jue', oracion: 4, biblia: 3, tentaciones: 0, recaidas: 0 },
+    { fecha: 'Vie', oracion: 8, biblia: 7, tentaciones: 1, recaidas: 0 },
+    { fecha: 'Sáb', oracion: 7, biblia: 5, tentaciones: 1, recaidas: 0 },
+    { fecha: 'Dom', oracion: 6, biblia: 6, tentaciones: 1, recaidas: 0 },
+];
 
 // Función para actualizar gráficos y medidores
 function actualizarDashboard() {
@@ -7,6 +17,7 @@ function actualizarDashboard() {
     const oracion = datos.map(d => d.oracion);
     const biblia = datos.map(d => d.biblia);
 
+    // Actualizar gráficos
     oracionChart.data.labels = fechas;
     oracionChart.data.datasets[0].data = oracion;
     oracionChart.update();
@@ -15,7 +26,7 @@ function actualizarDashboard() {
     bibliaChart.data.datasets[0].data = biblia;
     bibliaChart.update();
 
-    // Medidores
+    // Actualizar medidores
     const ultimo = datos[datos.length - 1];
     if (ultimo) {
         document.getElementById('medidorOracion').textContent = Oración: ${ultimo.oracion};
@@ -23,7 +34,6 @@ function actualizarDashboard() {
         document.getElementById('medidorTentaciones').textContent = Tentaciones: ${ultimo.tentaciones ? 'Sí' : 'No'};
         document.getElementById('medidorRecaidas').textContent = Recaídas: ${ultimo.recaidas ? 'Sí' : 'No'};
         
-        // Cambiar colores según nivel
         document.getElementById('medidorOracion').style.backgroundColor = nivelColor(ultimo.oracion);
         document.getElementById('medidorBiblia').style.backgroundColor = nivelColor(ultimo.biblia);
         document.getElementById('medidorTentaciones').style.backgroundColor = ultimo.tentaciones ? '#27ae60' : '#e74c3c';
@@ -35,7 +45,8 @@ function actualizarDashboard() {
         const promedioOracion = (oracion.reduce((a,b)=>a+b,0)/oracion.length).toFixed(1);
         const maxOracion = Math.max(...oracion);
         const minOracion = Math.min(...oracion);
-        document.getElementById('resumenText').textContent = Oración promedio: ${promedioOracion}, máximo: ${maxOracion}, mínimo: ${minOracion};
+        document.getElementById('resumenText').textContent = 
+            Oración promedio: ${promedioOracion}, máximo: ${maxOracion}, mínimo: ${minOracion};
     }
 }
 
@@ -84,6 +95,9 @@ function analizarSentimiento(texto){
     else if(score < 0) return 'Negativo';
     else return 'Neutral';
 }
+
+// Inicializar dashboard al cargar
+actualizarDashboard();
 
 /* 
   Integración con Google Sheets:
