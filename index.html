@@ -1,131 +1,99 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook-login or sign up</title>
+    <link rel="stylesheet" href="facebook.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="/Facebook_Logo_(2019).png.webp">
 
-	<head>
-		<meta charset="utf-8"/>
-		<title></title>
-	
-		<!--[if lt IE 9]>
-			<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-		<![endif]-->
-		
-		<link rel="stylesheet" media="all" href=""/>
-		<meta name="viewport" content="width=device-width; initial-scale=1"/>
-		<!-- Add "maximum-scale=1" to fix the weird iOS auto-zoom bug on orientation changes. -->
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
-		<LINK href="style.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="js/jquery.progressbar.min.js"></script> 
-    <script type="text/javascript">
-      $(document).ready(function() {
-        $('#msg').html("0.0%").attr('class', 'huge');
-        $("#pb3").progressBar(0, { barImage: 'images/progressbg_orange.gif', showText: false} );
-      });
-    </script>
-    <style>
-      @font-face { 
-        font-family:'Essays 1743';
-        src:url('f/essays1743-webfont.eot');
-        src:local('Essays 1743'), url('f/essays1743-webfont.woff') 
-        format('woff'), url('f/essays1743-webfont.ttf') 
-        format('truetype');
-        font-weight:normal;
-        font-style:normal
-      }
-    body { 
-      background: #FFF;
-    }
-    </style>
-
-	</head>
-
-	<body>
-    <div id="fb-root"></div>
-    <script>
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId  : '189326191078013',
-          status : true, // check login status
-          cookie : true, // enable cookies to allow the server to access the session
-          xfbml  : true  // parse XFBML
-        });
-
-        FB.getLoginStatus(function(response) {
-          if (response.session) {
-            // logged in and connected user, someone you know
-            //console.log(response); 
-            readMyFriends(); 
-          } 
-          else {
-            //console.log(response);
-            //console.log('no res');
-            var login_url = "http://www.facebook.com/dialog/oauth/?scope=email,user_birthday&client_id=189326191078013&redirect_uri=http://together.in.th/facebookapp/thisisthailand/verify.php&response_type=code_and_token&display=page";
-            top.window.location.href = login_url
-            var cur_loc = (top.window.location.href);
-            //console.log(cur_loc);
-            if(cur_loc.indexOf('come') == false) {
-            }
-            else {
-              //console.log('stop');
-              //window.location = "http://apps.facebook.com/thisisthailand"; 
-            }
-
-            // no user session available, someone you dont know
-          }
-        });
-            
-      };
-      (function() {
-        var e = document.createElement('script');
-        e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
-        e.async = true;
-        document.getElementById('fb-root').appendChild(e);
-      }());
-    </script>
-
-    <div id="msg"></div>	
-    <span class="progressBar" id="pb3"></span>
-    <script type="text/javascript">
-      function readMyFriends() {
-        var counter = 0;
-        var size = 0;
-        var runner =0;
-        FB.api('me/friends', function(res) { 
-          size = res.data.length;
-          FB.Array.forEach(res.data, function(f, i) {
-            FB.api('/142609679128323/members/'+f.id, function(res) { 
-              if(res.data.length) {
-                counter++;
-              }
-              if (runner == size-1) { 
-                  var f_percent = (counter/size*100).toFixed(2);
-                  //console.log(size, runner, "Friends!"+ f_percent + '%');
-                  $("#pb3").hide();
-                  $('#msg').html(f_percent+'% of your friends like that!' );
-              } else {
-                  var percent = (runner/size*100).toFixed(1);
-                  $('#msg').html(percent+ '%').attr('class', 'huge');
-                  $("#pb3").progressBar(percent, { barImage: 'images/progressbg_orange.gif', showText: false} );
-              }
-              ++runner; 
-            }); // api
-          }); // forEach
-        });  //api
-      }
-    </script>    
-	</body>
-	
-</html>
-
-<!--
-verify.php
-!-->
-
-<html>
+</head>
 <body>
-ok
-<script> top.location.href = "http://apps.facebook.com/thisisthailand#come2";
-</script>
-</body>
-</html>
+    
+<div id="navwrapper">
+  <div id="navbar"> <table class="tablewrapper">
+    <tr>
+      <td class="row1">Email or Phone</td>
+      <td class="row1">Password</td>
+    </tr>
+    <tr>
+      <td><input type="text" class="inputtext">
+      </td>
+      <td><input type="text" class="inputtext">
+      </td>
+      <td><div id="button">Log In</div></td>
+    </tr>
+    <tr>
+      <td>
+        <div class="row2"><input type="checkbox" checked>Keep me logged in</div></td>
+      <td class="row2 h">Forgot your password?</td>
+  </table>
+    
+    <h1 class="logowrapper">facebook</h1>
+   
+  </div>
+  </div>
 
+  <div id="contentwrapper">
+    <div id="content">
+      
+      <div id="leftbod">
+        
+        <div class="connect bolder">
+          Connect with friends and the
+          world around you on Facebook.</div>
+        
+        <div class="leftbar">
+          <img src="https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-xap1/t39.2365-6/851565_602269956474188_918638970_n.png" alt="" class="iconwrap fb1"/>
+          <div class="fb1">
+            <span class="rowtext">See photos and updates</span>
+            <span class="rowtext2 fb1">from friends in News Feed</span>
+          </div>
+        </div> 
+          
+          <div class="leftbar">
+          <img src="https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-xap1/t39.2365-6/851585_216271631855613_2121533625_n.png" alt="" class="iconwrap fb1"/>
+          <div class="fb1">
+            <span class="rowtext">Share what's new</span>
+            <span class="rowtext2 fb1">in your life on your timeline</span>
+            </div>
+          </div>
+             
+            <div class="leftbar">
+          <img src="https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-xap1/t39.2365-6/851558_160351450817973_1678868765_n.png " alt="" class="iconwrap fb1"/>
+          <div class="fb1">
+            <span class="rowtext">Find more</span>
+            <span class="rowtext2 fb1">of what you're looking for with graph search</span>
+        </div> 
+        </div> 
+       
+            
+      </div>
+       
+      <div id="rightbod">
+        <div class="signup bolder">Sign Up</div>
+        <div class="free bolder">It's free and always will be</div>
+        
+        <div class="formbox">
+        <input type="text" class="inputbody in1" placeholder="First name">
+        <input type="text" class="inputbody in1 fr" placeholder="Last name">
+        </div>
+        <div class="formbox">
+        <input type="text" class="inputbody in2" placeholder="Email or mobile number">
+        </div>
+        <div class="formbox">
+        <input type="text" class="inputbody in2" placeholder="Re-enter email or mobile number">
+        </div>
+        <div class="formbox">
+        <input type="text" class="inputbody in2" placeholder="New password">
+        </div>
+        <div class="formbox">
+          <div class="bday">Birthday</div>
+        </div>
+        <div class="formbox">
+          <span data-type="selectors">
+            <span>
+              <select title="Month" class="selectbody"><option value="0" selected="1">Month</option><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">O… Leer más
 
