@@ -1,4 +1,5 @@
-window.onload = function() {
+document.addEventListener('DOMContentLoaded', () => {
+
     // Datos iniciales de ejemplo
     let datos = [
         { fecha: 'Lun', oracion: 5, biblia: 4, tentaciones: 1, recaidas: 0 },
@@ -9,6 +10,49 @@ window.onload = function() {
         { fecha: 'Sáb', oracion: 7, biblia: 5, tentaciones: 1, recaidas: 0 },
         { fecha: 'Dom', oracion: 6, biblia: 6, tentaciones: 1, recaidas: 0 },
     ];
+
+    // Contextos de los canvas
+    const ctxOracion = document.getElementById('oracionChart').getContext('2d');
+    const ctxBiblia = document.getElementById('bibliaChart').getContext('2d');
+
+    // Gráfico de Oración
+    const oracionChart = new Chart(ctxOracion, {
+        type: 'line',
+        data: {
+            labels: datos.map(d => d.fecha),
+            datasets: [{
+                label: 'Nivel de Oración',
+                data: datos.map(d => d.oracion),
+                borderColor: '#27ae60',
+                backgroundColor: 'rgba(39, 174, 96, 0.2)',
+                tension: 0.4,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: true } },
+            scales: { y: { min: 0, max: 10 } }
+        }
+    });
+
+    // Gráfico de Biblia
+    const bibliaChart = new Chart(ctxBiblia, {
+        type: 'line',
+        data: {
+            labels: datos.map(d => d.fecha),
+            datasets: [{
+                label: 'Lectura de Biblia',
+                data: datos.map(d => d.biblia),
+                borderColor: '#1abc9c',
+                backgroundColor: 'rgba(26, 188, 156, 0.2)',
+                tension: 0.4,
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { min: 0, max: 10 } }
+        }
+    });
 
     // Función para asignar color según nivel
     function nivelColor(nivel) {
@@ -24,15 +68,13 @@ window.onload = function() {
         const biblia = datos.map(d => d.biblia);
 
         // Actualizar gráficos
-        if(window.oracionChart && window.bibliaChart){
-            window.oracionChart.data.labels = fechas;
-            window.oracionChart.data.datasets[0].data = oracion;
-            window.oracionChart.update();
+        oracionChart.data.labels = fechas;
+        oracionChart.data.datasets[0].data = oracion;
+        oracionChart.update();
 
-            window.bibliaChart.data.labels = fechas;
-            window.bibliaChart.data.datasets[0].data = biblia;
-            window.bibliaChart.update();
-        }
+        bibliaChart.data.labels = fechas;
+        bibliaChart.data.datasets[0].data = biblia;
+        bibliaChart.update();
 
         // Actualizar medidores
         const ultimo = datos[datos.length - 1];
@@ -41,7 +83,7 @@ window.onload = function() {
             document.getElementById('medidorBiblia').textContent = Biblia: ${ultimo.biblia};
             document.getElementById('medidorTentaciones').textContent = Tentaciones: ${ultimo.tentaciones ? 'Sí' : 'No'};
             document.getElementById('medidorRecaidas').textContent = Recaídas: ${ultimo.recaidas ? 'Sí' : 'No'};
-            
+
             document.getElementById('medidorOracion').style.backgroundColor = nivelColor(ultimo.oracion);
             document.getElementById('medidorBiblia').style.backgroundColor = nivelColor(ultimo.biblia);
             document.getElementById('medidorTentaciones').style.backgroundColor = ultimo.tentaciones ? '#27ae60' : '#e74c3c';
@@ -99,5 +141,6 @@ window.onload = function() {
 
     // Inicializar dashboard al cargar
     actualizarDashboard();
-};
+
+});
 
